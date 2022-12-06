@@ -7,17 +7,23 @@ conn = psycopg2.connect(
 
 def get_data(conn):
     cur = conn.cursor()
-    cur.execute("SELECT * FROM view_contacts;")
+    cur.execute("SELECT * FROM contacts;")
     rows = cur.fetchall()
     cur.close()
     return rows
 
 
+def add_contact(conn, first_name, last_name, title, organization):
+    cur = conn.cursor()
+    cur.execute(f"INSERT INTO contacts (first_name, last_name, title, organization) VALUES ('{first_name}', '{last_name}', '{title}', '{organization}');")
+    cur.close()
+
+
 while True: 
     cmd = input("Command: ").strip().lower()
     if cmd == "list":
-        for name1, name2, c, ct, cc in (get_data(conn)):
-            print(name1, "\t", name2, "\t", c, "\t", ct, "\t", cc)
+        for item in (get_data(conn)):
+            print(item[1:])
     elif cmd == "insert":
         first_name = input("  First Name: ").strip().capitalize()
         last_name = input("  Last name: ").strip().capitalize()
