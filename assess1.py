@@ -5,6 +5,9 @@ conn = psycopg2.connect(
     user="postgres",
     password="Sqlkone")
 
+
+print("Hello, you can use the following commands: list, insert, delete and save")
+
 def get_data(conn):
     cur = conn.cursor()
     cur.execute("SELECT * FROM contacts;")
@@ -23,7 +26,13 @@ def delete_contact(conn, first_name):
     cur.execute(f"DELETE FROM contacts WHERE first_name = '{first_name}';")
     cur.close()
 
-
+def save_contact(conn):
+    cur = conn.cursor()
+    try:
+        cur.execute("COMMIT;")
+    except:
+        print("No changes!")
+    cur.close()
 
 while True: 
     cmd = input("Command: ").strip().lower()
@@ -41,5 +50,15 @@ while True:
         first_name = input("  First_name: ").strip().capitalize()
         delete_contact(conn, first_name)
         print(f"{first_name} deleted!")
+    elif cmd == "save":
+        save_contact(conn)
+        print("Saved!")
     else:
         print("Unidentified command, please repeat")    
+
+
+
+
+
+
+        
